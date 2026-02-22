@@ -10,6 +10,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const cards = document.querySelectorAll(".container");
 
+  // Create Empty Message Element
+  const emptyMessage = document.createElement("div");
+  emptyMessage.className = "text-center mt-20";
+  emptyMessage.innerHTML = `
+    <h2 class="text-2xl font-semibold text-[#002C5C]">No jobs available</h2>
+    <p class="text-[#64748B] mt-2">
+      Check back soon for new job opportunities
+    </p>
+  `;
+
+  document.getElementById("allCards").after(emptyMessage);
+
   // Initialize status
   cards.forEach(card => {
     card.dataset.status = "not-applied";
@@ -50,18 +62,29 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ==============================
-  // Filter Logic
+  // Filter Cards
   // ==============================
   function filterCards(type) {
+    let visibleCount = 0;
+
     cards.forEach(card => {
       if (type === "all") {
         card.style.display = "flex";
+        visibleCount++;
       } else if (card.dataset.status === type) {
         card.style.display = "flex";
+        visibleCount++;
       } else {
         card.style.display = "none";
       }
     });
+
+    // Empty state show/hide
+    if (visibleCount === 0 && type !== "all") {
+      emptyMessage.style.display = "block";
+    } else {
+      emptyMessage.style.display = "none";
+    }
   }
 
   // ==============================
@@ -86,6 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       updateDashboard();
+      filterCards(getCurrentFilter());
     });
   });
 
@@ -111,6 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       updateDashboard();
+      filterCards(getCurrentFilter());
     });
   });
 
@@ -122,8 +147,18 @@ document.addEventListener("DOMContentLoaded", function () {
       const card = this.closest(".container");
       card.remove();
       updateDashboard();
+      filterCards(getCurrentFilter());
     });
   });
+
+  // ==============================
+  // Get Current Active Filter
+  // ==============================
+  function getCurrentFilter() {
+    if (interviewBtn.classList.contains("bg-[#3B82F6]")) return "interview";
+    if (rejectedBtn.classList.contains("bg-[#3B82F6]")) return "rejected";
+    return "all";
+  }
 
   // ==============================
   // Filter Buttons
@@ -143,7 +178,9 @@ document.addEventListener("DOMContentLoaded", function () {
     setActiveButton(this);
   });
 
-  // Default
+  // Default Load
   setActiveButton(allBtn);
   updateDashboard();
+  filterCards("all");
+
 });
