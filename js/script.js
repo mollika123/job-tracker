@@ -81,11 +81,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Empty state show/hide
     if (visibleCount === 0 && type !== "all") {
-      emptyMessage.style.display = "block";
+      // emptyMessage.style.display = "block";
+       emptyMessage.classList.remove("hidden");
     } else {
-      emptyMessage.style.display = "none";
+      // emptyMessage.style.display = "none";
+       emptyMessage.classList.add("hidden");
     }
-  }
+    }
+    
+
 
   // ==============================
   // Interview Button
